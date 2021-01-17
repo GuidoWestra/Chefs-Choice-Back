@@ -23,7 +23,7 @@ router.post("/signup", async (req, res, next) => {
 
     delete newUser.dataValues["password"];
 
-    res.status(201).json({ userId: newUser.id });
+    return res.status(201).json({ userId: newUser.id });
   } catch (e) {
     if (e.name === "SequelizeUniqueConstraintError") {
       return res.status(400).send({ message: "User with given credentials already present" });
@@ -45,10 +45,10 @@ router.post("/login", async (req, res, next) => {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      res.status(404).send({ message: "User not found" });
+      return res.status(404).send({ message: "User not found" });
     }
     if (!bcrypt.compareSync(password, user.password)) {
-      res.status(400).send({ message: "Password incorrect" });
+      return res.status(403).send({ message: "Password incorrect" });
     }
 
     delete user.dataValues["password"];

@@ -29,6 +29,6 @@ app.listen(PORT, () =>
 server started on: ${PORT}
 available endpoints:
 - / POST 
-  - sign up
-  - log in`)
+  - signup
+  - login`)
 );
