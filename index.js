@@ -25,7 +25,7 @@ app.use(cors());
 //  A endpoint set up for handling request
 //  conserning logging in and signing up
 app.use("/", authRouter);
-app.use("/favorites", recipeRouter);
+app.use("/favorites", authMiddleWare, recipeRouter);
 
 //authMiddleWare
 

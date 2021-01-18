@@ -12,10 +12,15 @@ post request to add to favorites
 getrequest to get all favorites
 //optional remove from favorites
 */
-
+/*   
+#1
 router.get("/list/:id", async (req, res, next) => {
+implement auth middleware logic to get dynamic data.
+
+*/
+router.get("/list", async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.user;
     const test = await User.findByPk(id, { include: Recipe, attributes: [] });
     console.log(test.dataValues);
     res.send(test.dataValues);

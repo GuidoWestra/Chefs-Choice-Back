@@ -12,7 +12,7 @@ async function auth(req, res, next) {
 
   try {
     const data = toData(auth[1]);
-    const user = findByPk(data.userId);
+    const user = await User.findByPk(data.userId);
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
@@ -20,12 +20,12 @@ async function auth(req, res, next) {
 
     return next();
   } catch (e) {
-    console.log("error in auth middleware:", error);
-    switch (error.name) {
+    console.log("error in auth middleware:", e);
+    switch (e.name) {
       case "TokenExpiredError":
-        return res.status(401).send({ error: error.name, message: error.message });
+        return res.status(401).send({ error: e.name, message: e.message });
       case "JsonWebTokenError":
-        return res.status(401).send({ error: error.name, message: error.message });
+        return res.status(401).send({ error: e.name, message: e.message });
       default:
         return res.status(400).send({ message: "oops error" });
     }
