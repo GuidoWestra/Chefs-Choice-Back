@@ -6,7 +6,7 @@ module.exports = {
       "recipes",
       [
         {
-          api_id: 2,
+          api_id: 1,
           title: "Potato chips",
           description: "open the bag",
           image: "lays.com",
@@ -14,7 +14,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          api_id: 3,
+          api_id: 2,
           title: "nuts",
           description: "climb the tree",
           image: "tree.com",

@@ -3,7 +3,7 @@ const User = require("./models").user;
 const app = express();
 const { PORT } = require("./config/constants");
 const authRouter = require("./routers/auth");
-const recipeRouter = require("./routers/auth");
+const recipeRouter = require("./routers/recipe");
 const loggerMiddleWare = require("morgan");
 const BodyParser = express.json();
 const cors = require("cors");
@@ -25,7 +25,9 @@ app.use(cors());
 //  A endpoint set up for handling request
 //  conserning logging in and signing up
 app.use("/", authRouter);
-app.use("/favorites", authMiddleWare, recipeRouter);
+app.use("/favorites", recipeRouter);
+
+//authMiddleWare
 
 app.listen(PORT, () =>
   console.log(`
