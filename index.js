@@ -3,9 +3,11 @@ const User = require("./models").user;
 const app = express();
 const { PORT } = require("./config/constants");
 const authRouter = require("./routers/auth");
+const recipeRouter = require("./routers/auth");
 const loggerMiddleWare = require("morgan");
 const BodyParser = express.json();
 const cors = require("cors");
+const authMiddleWare = require("./auth/middleware");
 
 //MiddleWares:
 //- Morgan middleware
@@ -23,12 +25,17 @@ app.use(cors());
 //  A endpoint set up for handling request
 //  conserning logging in and signing up
 app.use("/", authRouter);
+app.use("/favorites", authMiddleWare, recipeRouter);
 
 app.listen(PORT, () =>
   console.log(`
 server started on: ${PORT}
 available endpoints:
-- / POST 
-  - signup
-  - login`)
+- Authorization Router
+- /login
+- /signup
+
+- Authorized Requests
+- /favorites/list
+- /favorites/toggle`)
 );
