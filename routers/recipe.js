@@ -21,18 +21,42 @@ implement auth middleware logic to get dynamic data.
 router.get("/list", async (req, res, next) => {
   try {
     const { id } = req.user;
-    const test = await User.findByPk(id, { include: Recipe, attributes: [] });
-    console.log(test.dataValues);
-    res.send(test.dataValues);
+    const result = await User.findByPk(id, { include: Recipe, attributes: [] });
+
+    res.send(result.dataValues);
   } catch (e) {
     console.log(e.message);
     next(e);
   }
 });
 
-router.post("/toggle/:userId/:apiId", async (req, res, next) => {
+router.post("/toggle/:apiId", async (req, res, next) => {
   try {
-    const { userId, apiId } = req.params;
+    const { id } = req.user;
+    const { apiId } = req.params;
+
+    let user_favorite = await User_favorites.findOne({ where: { api_id: apiId, user_id: id } });
+    if (!user_favorite) {
+      const result = await axios.get(
+        `https://api.spoonacular.com/recipes/${apiId}/information?apiKey=${API_KEY_1}`
+      );
+      console.log("Recipe:", result.data.title);
+      recipe = await Recipe.create({
+        api_id: apiId,
+        title: result.data.title,
+        description: result.data.instructions,
+        image: result.data.image,
+      });
+      await User_favorites.create({
+        user_id: id,
+        recipe_id: recipe.id,
+      });
+      res.status(200).send({ message: "Favorite Added", data: recipe });
+    } else {
+      await User_favorites.delete({ where: { api_id: apiId, user_id: id } });
+      res.status(200).send({ message: "Favorite Deleted" });
+    }
+
     let recipe = await Recipe.findOne({ where: { api_id: apiId } });
 
     if (!recipe) {
@@ -46,12 +70,13 @@ router.post("/toggle/:userId/:apiId", async (req, res, next) => {
         description: result.data.instructions,
         image: result.data.image,
       });
+      await User_favorites.create({
+        user_id: id,
+        recipe_id: recipe.id,
+      });
+    } else {
+      User_favorites.delete();
     }
-    // console.log("Inside 67", recipe);
-    await User_favorites.create({
-      user_id: userId,
-      recipe_id: recipe.id,
-    });
     return res.status(200).send({ message: "All good" });
   } catch (e) {
     console.log(e.message);
