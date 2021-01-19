@@ -3,6 +3,7 @@ const { Router } = require("express");
 const { toJwt } = require("../auth/jwt");
 // const authMiddleware = require("../auth/middleware");
 const User = require("../models/").user;
+const Recipe = require("../models/").recipe;
 const { SALT_ROUNDS } = require("../config/constants");
 
 const router = new Router();
@@ -42,7 +43,7 @@ router.post("/login", async (req, res, next) => {
         message: "Please provide both email and password",
       });
     }
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email }, include: { model: Recipe } });
 
     if (!user) {
       return res.status(404).send({ message: "User not found" });

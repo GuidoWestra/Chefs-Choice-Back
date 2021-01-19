@@ -35,30 +35,7 @@ router.post("/toggle/:apiId", async (req, res, next) => {
     const { id } = req.user;
     const { apiId } = req.params;
 
-    let user_favorite = await User_favorites.findOne({ where: { api_id: apiId, user_id: id } });
-    if (!user_favorite) {
-      const result = await axios.get(
-        `https://api.spoonacular.com/recipes/${apiId}/information?apiKey=${API_KEY_1}`
-      );
-      console.log("Recipe:", result.data.title);
-      recipe = await Recipe.create({
-        api_id: apiId,
-        title: result.data.title,
-        description: result.data.instructions,
-        image: result.data.image,
-      });
-      await User_favorites.create({
-        user_id: id,
-        recipe_id: recipe.id,
-      });
-      res.status(200).send({ message: "Favorite Added", data: recipe });
-    } else {
-      await User_favorites.delete({ where: { api_id: apiId, user_id: id } });
-      res.status(200).send({ message: "Favorite Deleted" });
-    }
-
     let recipe = await Recipe.findOne({ where: { api_id: apiId } });
-
     if (!recipe) {
       const result = await axios.get(
         `https://api.spoonacular.com/recipes/${apiId}/information?apiKey=${API_KEY_1}`
@@ -67,20 +44,19 @@ router.post("/toggle/:apiId", async (req, res, next) => {
       recipe = await Recipe.create({
         api_id: apiId,
         title: result.data.title,
-        description: result.data.instructions,
+        // description: result.data.instructions,
         image: result.data.image,
       });
-      await User_favorites.create({
+      const newa = await User_favorites.create({
         user_id: id,
         recipe_id: recipe.id,
       });
-    } else {
-      User_favorites.delete();
+      res.status(200).send({ message: "Favorite Added", data: recipe });
     }
-    return res.status(200).send({ message: "All good" });
+    res.status(200).send({ message: "Favorite already added" });
   } catch (e) {
-    console.log(e.message);
-    return res.send(e.message);
+    console.log(e);
+    res.send({ message: "oop" });
   }
 });
 
