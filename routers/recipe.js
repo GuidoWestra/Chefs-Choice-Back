@@ -51,12 +51,17 @@ router.post("/toggle/:apiId", async (req, res, next) => {
         user_id: id,
         recipe_id: recipe.id,
       });
-      res.status(200).send({ message: "Favorite Added", data: recipe });
+      return res.status(200).send({ message: "Favorite Added", data: recipe });
     }
-
-    res.status(200).send({ message: "Favorite deleted" });
+    const userFavorite = await User_favorites.findOne({
+      where: { user_id: id, recipe_id: recipe.id },
+    });
+    if (userFavorite) {
+      userFavorite.destroy();
+      res.status(200).send({ message: "Favorite deleted" });
+    } else return res.status(200).send({ message: "Favorite Added", data: recipe });
   } catch (e) {
-    console.log(e);
+    console.log("what is oop", e);
     res.send({ message: "oop" });
   }
 });
