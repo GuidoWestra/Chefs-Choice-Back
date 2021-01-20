@@ -7,7 +7,7 @@ const Recipe = require("../models/").recipe;
 const { SALT_ROUNDS } = require("../config/constants");
 
 const router = new Router();
-
+//Sign up Route
 router.post("/signup", async (req, res, next) => {
   const { email, password, name } = req.body;
 
@@ -33,7 +33,7 @@ router.post("/signup", async (req, res, next) => {
     }
   }
 });
-
+//Login Route
 router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
