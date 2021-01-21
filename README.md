@@ -5,13 +5,19 @@
 backend-db runs on sequelize-cli. 
 - npx sequelize-cli db:migrate
 - npx sequelize-cli db:seed:all <br/>
-
 :warning:Hard reset.
 - npx sequelize-cli db:migrate:undo:all<br/>
 
 the server runs on express: 
 used endpoints: 
--
+- /authRouter
+  - /login
+  - /signUp
+- /recipe (this endpoint uses auth middleware)
+  - /list
+  - /toggle
+<br />
+running npm start, starts the server. 
 
 
 
