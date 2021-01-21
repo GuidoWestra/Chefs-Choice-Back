@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt");
 const { Router } = require("express");
 const { toJwt } = require("../auth/jwt");
-// const authMiddleware = require("../auth/middleware");
 const User = require("../models/").user;
 const Recipe = require("../models/").recipe;
 const { SALT_ROUNDS } = require("../config/constants");
