@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt");
 const { Router } = require("express");
 const { toJwt } = require("../auth/jwt");
-// const authMiddleware = require("../auth/middleware");
 const User = require("../models/").user;
 const Recipe = require("../models/").recipe;
 const { SALT_ROUNDS } = require("../config/constants");
@@ -12,7 +11,7 @@ router.post("/signup", async (req, res, next) => {
   const { email, password, name } = req.body;
 
   if (!email || !password || !name) {
-    return res.status(400).send("Please provide an Email, password and name");
+    return res.status(400).send({ message: "Please provide an Email, password and name" });
   }
 
   try {
